@@ -1,10 +1,10 @@
-use serde::{Deserialize, Deserializer, Serialize};
 use chrono::prelude::*;
+use serde::{Deserialize, Deserializer, Serialize};
 
-use ham_rs::{Call,Grid,CountryInfo,Country,LogEntry,Mode};
 use ham_rs::lotw::LoTWStatus;
+use ham_rs::{Call, Country, CountryInfo, Grid, LogEntry, Mode};
 
-use crate::{Receiver};
+use crate::Receiver;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Spot {
@@ -23,7 +23,7 @@ pub struct Spot {
     pub call: Call,
     pub color: i32,
     pub locator: Option<Grid>,
-    pub valid: bool
+    pub valid: bool,
 }
 
 impl Spot {
@@ -49,11 +49,14 @@ impl Spot {
     pub fn new_state(&self, logs: &Vec<LogEntry>) -> bool {
         match (self.call.country(), self.call.state()) {
             (Ok(country), Some(state)) if country == Country::UnitedStates => {
-                match logs.iter().position(|i| i.call.state() == Some(state.to_string())) {
+                match logs
+                    .iter()
+                    .position(|i| i.call.state() == Some(state.to_string()))
+                {
                     Some(_) => false,
                     None => true,
                 }
-            },
+            }
             _ => false,
         }
     }
@@ -61,11 +64,14 @@ impl Spot {
     pub fn new_country(&self, logs: &Vec<LogEntry>) -> bool {
         match self.call.country() {
             Ok(country) => {
-                match logs.iter().position(|i| i.call.country() == Ok(country.clone())) {
+                match logs
+                    .iter()
+                    .position(|i| i.call.country() == Ok(country.clone()))
+                {
                     Some(_) => false,
                     None => true,
                 }
-            },
+            }
             _ => false,
         }
     }
@@ -73,14 +79,15 @@ impl Spot {
     pub fn uses_lotw(&self) -> bool {
         match self.call.lotw() {
             LoTWStatus::Registered | LoTWStatus::LastUpload(_) => true,
-            _ => false
+            _ => false,
         }
     }
 }
 
 pub fn callsign_as_string<'de, D>(deserializer: D) -> Result<Call, D::Error>
-    where D: Deserializer<'de>
+where
+    D: Deserializer<'de>,
 {
-    let v : String = Deserialize::deserialize(deserializer)?;
+    let v: String = Deserialize::deserialize(deserializer)?;
     Ok(Call::new(v))
 }

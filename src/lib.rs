@@ -1,39 +1,40 @@
 mod spot;
 
+use ham_rs::Mode;
 use serde::{Deserialize, Serialize};
 pub use spot::Spot;
-use ham_rs::{Mode};
 
-pub const RECEIVER_MODES: [Mode; 16] =
-    [Mode::DigiU,
-     Mode::DigiL,
-     Mode::USB,
-     Mode::LSB,
-     Mode::FT8,
-     Mode::FT4,
-     Mode::JT9,
-     Mode::AM,
-     Mode::FM,
-     Mode::NFM,
-     Mode::WSPR,
-     Mode::PSK,
-     Mode::Multipsk,
-     Mode::Sig,
-     Mode::Hell,
-     Mode::CW];
+pub const RECEIVER_MODES: [Mode; 16] = [
+    Mode::DigiU,
+    Mode::DigiL,
+    Mode::USB,
+    Mode::LSB,
+    Mode::FT8,
+    Mode::FT4,
+    Mode::JT9,
+    Mode::AM,
+    Mode::FM,
+    Mode::NFM,
+    Mode::WSPR,
+    Mode::PSK,
+    Mode::Multipsk,
+    Mode::Sig,
+    Mode::Hell,
+    Mode::CW,
+];
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Receiver {
-    #[serde(rename = "ID")] 
+    #[serde(rename = "ID")]
     pub id: u32,
-    #[serde(rename = "Mode")] 
+    #[serde(rename = "Mode")]
     pub mode: Mode,
-    #[serde(rename = "Frequency")] 
+    #[serde(rename = "Frequency")]
     pub frequency: f32,
     #[serde(rename = "FilterLow")]
     pub filter_low: f32,
     #[serde(rename = "FilterHigh")]
-    pub filter_high: f32
+    pub filter_high: f32,
 }
 
 impl Receiver {
@@ -52,7 +53,7 @@ pub struct Radio {
     #[serde(rename = "Name")]
     pub name: String,
     #[serde(rename = "Running")]
-    pub running: bool
+    pub running: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -69,23 +70,21 @@ pub struct Version {
 #[serde(tag = "cmd")]
 pub enum CommandResponse {
     #[serde(rename = "getReceiversResponse")]
-    Receivers{
+    Receivers {
         #[serde(rename = "Receivers")]
-        receivers: Vec<Receiver> 
+        receivers: Vec<Receiver>,
     },
     #[serde(rename = "getVersionResponse")]
     Version(Version),
     #[serde(rename = "getRadiosResponse")]
-    Radios{
+    Radios {
         #[serde(rename = "Radios")]
-        radios: Vec<Radio> 
+        radios: Vec<Radio>,
     },
     #[serde(rename = "spotResponse")]
-    Spots{ 
-        spots: Vec<Spot>
-    },
+    Spots { spots: Vec<Spot> },
     #[serde(rename = "ReceiverResponse")]
-    ReceiverResponse{
+    ReceiverResponse {
         #[serde(rename = "ID")]
         id: u32,
         #[serde(rename = "Mode")]
@@ -96,7 +95,7 @@ pub enum CommandResponse {
         filter_low: f32,
         #[serde(rename = "FilterHigh")]
         filter_high: f32,
-    }
+    },
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -105,57 +104,57 @@ pub enum Command {
     #[serde(rename = "getReceivers")]
     GetReceivers,
     #[serde(rename = "setFrequency")]
-    SetFrequency{ 
+    SetFrequency {
         #[serde(rename = "Frequency")]
         frequency: String,
         #[serde(rename = "ID")]
-        id: u32
+        id: u32,
     },
     #[serde(rename = "setMode")]
-    SetMode{
+    SetMode {
         #[serde(rename = "Mode")]
         mode: Mode,
         #[serde(rename = "ID")]
-        id: u32
+        id: u32,
     },
     #[serde(rename = "getVersion")]
     GetVersion,
     #[serde(rename = "getRadios")]
     GetRadios,
     #[serde(rename = "addReceiver")]
-    AddReceiver{ 
+    AddReceiver {
         #[serde(rename = "ID")]
-        id: u32
+        id: u32,
     },
     #[serde(rename = "removeReceiver")]
-    RemoveReceiver{
+    RemoveReceiver {
         #[serde(rename = "ID")]
-        id: u32 
+        id: u32,
     },
     #[serde(rename = "setRunning")]
-    SetRunning{
+    SetRunning {
         #[serde(rename = "ID")]
         id: u32,
         #[serde(rename = "Running")]
-        running: bool
+        running: bool,
     },
     #[serde(rename = "subscribeToSpots")]
-    SubscribeToSpots{
+    SubscribeToSpots {
         #[serde(rename = "Enable")]
-        enable: bool
+        enable: bool,
     },
     #[serde(rename = "subscribeToAudio")]
-    SubscribeToAudio{ 
+    SubscribeToAudio {
         #[serde(rename = "RxID")]
         rx_id: u32,
         #[serde(rename = "Enable")]
-        enable: bool
+        enable: bool,
     },
     #[serde(rename = "subscribeToSpectrum")]
-    SubscribeToSpectrum{
+    SubscribeToSpectrum {
         #[serde(rename = "RxID")]
         rx_id: u32,
         #[serde(rename = "Enable")]
-        enable: bool
-    }
+        enable: bool,
+    },
 }

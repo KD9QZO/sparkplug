@@ -1,13 +1,21 @@
+#
+# Makefile for 'sparkplug'
+#
+
+
+CARGO ?= cargo
+
+
 all: test build
 
 clean:
-	cargo clean
+	$(CARGO) clean
 
 test:
-	cargo test
+	$(CARGO) test
 
 build:
-	cargo build
+	$(CARGO) build
 
 release: clean test
-	cargo build --release
+	$(CARGO) build --release
